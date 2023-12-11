@@ -9,7 +9,8 @@ public interface RBI {
     void applyLoan(BufferedReader br, float amount, int years);
     void createRecord(String aadhar, Customer obj);
     void printCustomerDetails(String aadhar);
-    boolean getCustomerRecord(String aadharNo);
+    boolean getCustomerRecord(String aadhar);
+    int getNumberOfCustomers();
     void applyCreditCard();
-    float getBalance();
+    float getBalance(String aadhar);
 }

@@ -20,7 +20,7 @@ public class Main implements Runnable {
 
     int selectedBank, selectedOperation;
     String aadharNo,createAccount,redirectToBank;
-    float withdrawalAmount,amount, years;
+    float withdrawalAmount,amount, years,balance;
     public static void main(String[] args)  {
         Main obj = new Main();
         Thread t = new Thread(obj);
@@ -30,7 +30,7 @@ public class Main implements Runnable {
     @Override
     public void run() {
         boolean flag =true;
-        temp: while(true) {
+        temp1 : while(true) {
             SelectBank();
             switch (selectedBank) {
                 case 1:
@@ -49,20 +49,23 @@ public class Main implements Runnable {
                     rbi = IDFC.getInstance();
                     break;
                 case 6:
-                    break temp;
+                    break temp1;
 
             }
-            flag = true;
-            while (flag) {
-                System.out.println("Please enter your Aadhar Number:");
-                try {
-                    aadharNo = buff.readLine();
-                } catch (IOException e) {
-                    e.printStackTrace();
+                while (true) {
+                if(aadharNo==null) {
+                    System.out.println("Please enter your Aadhar Number:");
+                    try {
+                        aadharNo = buff.readLine();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
+
                 if (rbi.getCustomerRecord(aadharNo)) {
                     SelectOperations();
                 }
+
                 else {
                     System.out.println("You do not have an account with your registered Aadhar Number.");
                     System.out.println("Do you want to create an account? Type YES/NO");
@@ -89,9 +92,15 @@ public class Main implements Runnable {
                     e.printStackTrace();
                 }
                 if(redirectToBank.equals("YES")) continue;
-                else flag=false;
+                else break;
             }
         }
+        //Print the number of customers
+        System.out.println("No. of customers in ICICI:"+ICICI.getInstance().getNumberOfCustomers());
+        System.out.println("No. of customers in HDFC:"+HDFC.getInstance().getNumberOfCustomers());
+        System.out.println("No. of customers in SBI:"+SBI.getInstance().getNumberOfCustomers());
+        System.out.println("No. of customers in AXIS:"+AXIS.getInstance().getNumberOfCustomers());
+        System.out.println("No. of customers in IDFC:"+IDFC.getInstance().getNumberOfCustomers());
     }
 
 
@@ -106,7 +115,7 @@ public class Main implements Runnable {
     }
 
     public void SelectOperations() {
-        System.out.println("Select your choice\n1. Deposit\n2. Withdrawl\n3. OpenFD\n4. Apply Loan\n5. Apply CC");
+        System.out.println("Select your choice\n1. Deposit\n2. Withdrawl\n3. OpenFD\n4. Apply Loan\n5. Apply CC\n6. Get Balance");
         try {
             selectedOperation = Integer.parseInt(buff.readLine());
         }
@@ -128,6 +137,10 @@ public class Main implements Runnable {
 
                         case 4: //Loan
                             applyLoanMain();
+                            break;
+
+                        case 6:
+                            getBalanceMain();
                             break;
 
                     }
@@ -216,5 +229,11 @@ public class Main implements Runnable {
             e.printStackTrace();
         }
         rbi.applyLoan(buff ,amount, (int) years);
+    }
+
+    public void getBalanceMain()
+    {
+        balance = rbi.getBalance(aadharNo);
+        System.out.println("Your balance is:"+balance);
     }
 }

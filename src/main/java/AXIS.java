@@ -100,6 +100,11 @@ class AXIS implements  RBI{
         return record.containsKey(aadharNo);
     }
 
+    @Override
+    public int getNumberOfCustomers() {
+        return record.size();
+    }
+
     public void printCustomerDetails(String aadharNo) {
         if (getCustomerRecord(aadharNo))
         {
@@ -113,8 +118,9 @@ class AXIS implements  RBI{
     }
 
     @Override
-    public float getBalance() {
-        return 0;
+    public float getBalance(String aadharNo) {
+        Customer obj = record.get(aadharNo);
+        return obj.balance;
     }
 
     public Boolean checkMinimumBalance(int balance) {
