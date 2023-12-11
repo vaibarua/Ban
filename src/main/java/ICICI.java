@@ -1,11 +1,27 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.HashMap;
 
 class ICICI implements  RBI{
 
     final String[] loanTypes = {"Personal","Home","Car","Educational"};
     float ROI;
+    HashMap<String,Customer> record;
+    private static ICICI instance = null;
+
+    private ICICI() {
+        ROI=0.0F;
+        record=new HashMap<>();
+    }
+
+    public static ICICI getInstance() {
+        if (instance == null) {
+            instance = new ICICI();
+        }
+        return instance;
+    }
+
     @Override
     public void depositMoney(float amount, Customer obj) {
         obj.balance = obj.balance + amount;
@@ -72,6 +88,24 @@ class ICICI implements  RBI{
         System.out.println("Total interest: "+interest);
         System.out.println("Outstanding amount after interest: "+(amount+interest));
         System.out.println("RBI charges: "+rbiCharges);
+    }
+
+    @Override
+    public void createRecord(String aadhar, Customer obj) {
+        record.put(aadhar,obj);
+    }
+
+    @Override
+    public boolean getCustomerRecord(String aadharNo) {
+        return record.containsKey(aadharNo);
+    }
+
+    public void printCustomerDetails(String aadharNo) {
+        if (getCustomerRecord(aadharNo))
+        {
+            Customer obj = record.get(aadharNo);
+            System.out.println(obj.toString());
+        }
     }
 
     @Override
